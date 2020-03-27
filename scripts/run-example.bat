@@ -1,0 +1,1 @@
+spike-pdf-tool folder --folder C:\pdfs --filterPreset new

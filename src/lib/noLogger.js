@@ -1,0 +1,13 @@
+exports.LogLevel = {};
+exports.defaultSettings = {};
+exports.AlertLevel = {};
+exports.config = {};
+exports.init = () => {};
+exports.shutdown = () => {};
+exports.net = () => {};
+exports.debug = () => {};
+exports.info = () => {};
+exports.warn = () => {};
+exports.error = () => {};
+exports.fatal = () => {};
+exports.alert = () => {};

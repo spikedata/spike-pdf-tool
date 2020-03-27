@@ -1,0 +1,58 @@
+{
+  "name": "@spike/pdf-tool",
+  "version": "1.0.9",
+  "description": "Spike cli app to find and process pdfs using the Spike API",
+  "main": "src/app.js",
+  "homepage": "https://spikedata.co.za",
+  "author": {
+    "name": "Ilan Copelyn",
+    "email": "ilan@spikedata.co.za"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spikedata/spike-pdf-tool"
+  },
+  "license": "MIT",
+  "keywords": [
+    "spike",
+    "pdf",
+    "south africa",
+    "bank",
+    "statements"
+  ],
+  "files": [
+    "dist/",
+    "scripts/"
+  ],
+  "dependencies": {
+    "@spikedata/api": "^1.0.2",
+    "argparse": "1.0.10",
+    "async": "3.1.0",
+    "chalk": "2.4.2",
+    "deep-extend": "0.6.0",
+    "duration": "0.2.2",
+    "json5": "2.1.0",
+    "minimatch": "3.0.4",
+    "read": "1.0.7"
+  },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-core": "6.26.3",
+    "babel-loader": "7.1.1",
+    "babel-preset-env": "1.7.0",
+    "babel-preset-stage-3": "6.24.1",
+    "npm-run-all": "4.1.5",
+    "webpack": "3.4.1"
+  },
+  "scripts": {
+    "build": "npm-run-all --parallel build:*",
+    "build:cli": "rsync src/cli.js dist/",
+    "build:app": "webpack --progress --colors --display-modules --config ./src/webpack.config.js",
+    "pub": "./scripts/publish.sh"
+  },
+  "bin": {
+    "spike-pdf-tool": "dist/cli.js",
+    "spike-pdf-tool-update": "scripts/update.bat"
+  },
+  "preferGlobal": false
+}
