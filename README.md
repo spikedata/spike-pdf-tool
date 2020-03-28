@@ -1,16 +1,15 @@
 # Desktop pdf converter
 
-The source code for our [desktop pdf converter](/solutions/statement-processing/desktop-converter/) is available for you to fork and customise to your hearts content. This provides a useful example of using the [pdf API](/code/api/pdf/), in addition to the [CLI app](/code/samples/spike-sample-client/) sample.
+This repo contains the source code for our [desktop pdf converter](https://app.spikedata.co.za/docs/solutions/statement-processing/desktop-converter/). The tool can be used directly without needing the source code. However we have made the source code publicly accessible in order to provide a useful demonstration of using the [pdf API](https://app.spikedata.co.za/docs/code/api/pdf/) in a more complete application than the [CLI app](https://app.spikedata.co.za/docs/code/samples/spike-sample-client/) sample.
 
 ## Source code
 
-Get the sample code and install package dependencies:
-
 ```bash
-# samples/spike-pdf-tool
-mkdir samples
-cd samples
-git clone https://github.com/ilanc/spike-pdf-tool
+# clone source code and install package dependencies:
+git clone https://github.com/spikedata/spike-pdf-tool
 cd spike-pdf-tool
 npm install
+
+# run
+node src/app --version
 ```

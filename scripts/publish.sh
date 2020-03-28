@@ -8,6 +8,7 @@ NC='\033[0m' # No Color
 BASEDIR=$(dirname $0)
 cd $BASEDIR/..
 
+# run build here to catch build errors before `npm version patch` is run
 printf "${CYAN}npm run build${NC}\n"
 npm run build
 
@@ -20,8 +21,9 @@ npm version patch
 # git tag $ver
 # git push --tags
 
+# run run build here in order for `spike-pdf-tool --version` to show the version number created by `npm version patch` above
+printf "${CYAN}npm run build${NC}\n"
+npm run build
+
 printf "${CYAN}npm publish${NC}\n"
 npm publish
-
-# update to latest @spikedata/api version
-# npm install -S @spikedata/api@latest
