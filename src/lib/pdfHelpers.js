@@ -253,7 +253,7 @@ exports.getPdfResultSummary = function(data) {
     issuedOn: data.statement.dates.issuedOn,
     from: data.statement.dates.from,
     to: data.statement.dates.to,
-    nameAddress: data.statement.nameAddress.join("\n"), // quotes (") will be escaped as "" in writeCsv - see ./csv.js : objectArrayToCsvRows
+    nameAddress: data.statement.nameAddress && data.statement.nameAddress.join("\n"), // quotes (") will be escaped as "" in writeCsv - see ./csv.js : objectArrayToCsvRows
     detected: undefined, // data.detected, // TODO: FUTURE: `detected` is like `flags` but for encoding probs = weird chars detected
     flags: undefined // data.flags, // TODO: FUTURE:
   };
