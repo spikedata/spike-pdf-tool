@@ -19,7 +19,7 @@ npm version patch
 # git tag - `npm version` does this already
 # ver=`jq .version ./package.json`
 # git tag $ver
-# git push --tags
+git push --tags # note - must manually push tags to git to create e.g. https://github.com/spikedata/api/tags
 
 # run run build here in order for `spike-pdf-tool --version` to show the version number created by `npm version patch` above
 printf "${CYAN}npm run build${NC}\n"
