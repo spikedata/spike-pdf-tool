@@ -26,7 +26,7 @@ exports.TZ_OFFSET = new Date().getTimezoneOffset(); // e.g. -120 for GMT+0200
 exports.TZ_OFFSET_MS = exports.TZ_OFFSET * 60 * 1000; // e.g. -120 * 60 * 1000 for GMT+0200
 exports.TZ_STR = timeZoneStr(); // e.g. +02:00 for GMT+0200
 
-exports.numDaysAgo = function(numDays, removeTime = true) {
+exports.numDaysAgo = function (numDays, removeTime = true) {
   let today = new Date();
   let past = new Date(today.getTime() - numDays * 24 * 60 * 60 * 1000);
   if (removeTime) {
@@ -36,11 +36,11 @@ exports.numDaysAgo = function(numDays, removeTime = true) {
   }
 };
 
-exports.yyyy_mm_dd = function(d) {
+exports.yyyy_mm_dd = function (d) {
   return d.toISOString().substr(0, 10);
 };
 
-exports.dd_mm_yyy = function(d, sep = "-", pad = true) {
+exports.dd_mm_yyyy = function (d, sep = "-", pad = true) {
   let dd = d.getDate();
   if (pad && dd < 10) dd = "0" + dd;
   let mm = d.getMonth() + 1;
@@ -50,7 +50,7 @@ exports.dd_mm_yyy = function(d, sep = "-", pad = true) {
 };
 
 // convert local date to UTC
-exports.addTzOffset = function(d) {
+exports.addTzOffset = function (d) {
   let c = new Date(d.valueOf());
   c.setTime(d.getTime() + exports.TZ_OFFSET_MS);
   return c;
@@ -58,20 +58,20 @@ exports.addTzOffset = function(d) {
 
 // convert date that was already in UTC but was mistakenly instantiated as a local date to actual local date
 // e.g. timestamp in MySQL has no timezone, if written on server will be in UTC then read on laptop then will be instantiated as SAST date i.e. +2hrs from actual event
-exports.subtractTzOffset = function(d) {
+exports.subtractTzOffset = function (d) {
   let c = new Date(d.valueOf());
   c.setTime(d.getTime() - exports.TZ_OFFSET_MS);
   return c;
 };
 
 // e.g. 2019-06-26T02:00:00.000+02:00 for 2019-06-26T00:00:00.000Z
-exports.toLocalString = function(d) {
+exports.toLocalString = function (d) {
   let c = exports.subtractTzOffset(d);
   return c.toISOString().substr(0, 23) + exports.TZ_STR;
 };
 
 // utcToday (2019-06-26T00:00:00.000Z = 2019-06-26T02:00:00.000+02:00)
-exports.utcToday = function() {
+exports.utcToday = function () {
   let now = new Date();
   let utcTodayFromLocalNow = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
   // let utcTodayFromUtcNow = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
@@ -79,27 +79,27 @@ exports.utcToday = function() {
 };
 
 // localToday (2019-06-25T22:00:00.000Z = 2019-06-26T00:00:00.000+02:00)
-exports.localToday = function() {
+exports.localToday = function () {
   let localToday = new Date(new Date().setHours(0, 0, 0, 0));
   return localToday;
 };
 
-exports.utcEndOfDay = function(date) {
+exports.utcEndOfDay = function (date) {
   let start = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   return new Date(start.getTime() + 86400000 - 1); // tomorrow - 1 ms
 };
 
-exports.localEndOfDay = function(date) {
+exports.localEndOfDay = function (date) {
   let start = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   return new Date(start.getTime() + 86400000 - 1); // tomorrow - 1 ms
 };
 
-exports.utcEndOfToday = function() {
+exports.utcEndOfToday = function () {
   let utc = exports.utcToday();
   return exports.utcEndOfDay(utc);
 };
 
-exports.localEndOfToday = function() {
+exports.localEndOfToday = function () {
   let local = exports.localToday();
   return exports.localEndOfDay(local);
 };
@@ -129,6 +129,6 @@ console.log("localUTCToday4", localUTCToday4.toISOString());
 */
 
 const fullIsoDateRegex = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/;
-exports.isIsoDateString = function(d) {
+exports.isIsoDateString = function (d) {
   return fullIsoDateRegex.test(d);
 };

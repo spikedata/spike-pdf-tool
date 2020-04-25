@@ -23,28 +23,28 @@ if (spikeApi.default) {
 
 //#region cli
 
-const allConfigs = Object.keys(Config).filter(x => x !== "checkConfig");
+const allConfigs = Object.keys(Config).filter((x) => x !== "checkConfig");
 const filterTypes = {
   all: {
     option: 1,
-    text: "all"
+    text: "all",
   },
   "new-only": {
     option: 2,
-    text: "new files only"
+    text: "new files only",
   },
   "new-and-prev-errors": {
     option: 3,
-    text: "new + prev errors"
+    text: "new + prev errors",
   },
   pattern: {
     option: 4,
-    text: "filename matching a pattern"
+    text: "filename matching a pattern",
   },
   none: {
     option: 5,
-    text: "none = quit"
-  }
+    text: "none = quit",
+  },
 };
 const allFilterTypes = Object.keys(filterTypes);
 const optionTofilterType = Object.keys(filterTypes).reduce((prev, cur) => {
@@ -108,95 +108,112 @@ const _CommandLineArgs = {
   argParserDetails: {
     version,
     addHelp: true,
-    description: "Argparse example"
+    description: "Argparse example",
   },
   sharedArgs: {
     config: {
       choices: allConfigs,
       defaultValue: "default",
-      help: "config settings"
+      help: "config settings",
     },
     quiet: {
       action: "storeTrue",
       defaultValue: false,
-      help: "don't print library logs"
-    }
+      help: "don't print library logs",
+    },
+    writeOutputCsv: {
+      type: bool,
+      defaultValue: true,
+      help: "write .csv = just transactions from .pdf",
+    },
+    writeOutputJson: {
+      type: bool,
+      defaultValue: true,
+      help: "write .json = full result extracted from .pdf",
+    },
+    writeOutput: {
+      type: bool,
+      help: "shortcut to set --writeOutput*=true|false",
+    },
   },
   subcommands: {
     configure: {
       command: {
         addHelp: true,
-        description: "Configure the tool with your keys"
+        description: "Configure the tool with your keys",
       },
-      args: {}
+      args: {},
     },
     folder: {
       command: {
         addHelp: true,
-        description: "Recurse through a folder and process all .pdfs found"
+        description: "Recurse through a folder and process all .pdfs found",
       },
       args: {
-        writeOutputCsv: {
-          type: bool,
-          defaultValue: true,
-          help: "write .csv = just transactions from .pdf"
-        },
-        writeOutputJson: {
-          type: bool,
-          defaultValue: true,
-          help: "write .json = full result extracted from .pdf"
-        },
-        writeOutput: {
-          type: bool,
-          help: "shortcut to set --writeOutput*=true|false"
-        },
         writeIndex: {
           type: bool,
           defaultValue: true,
           help:
-            "write results to index.csv file - useful to switch it off if changing identify() functions"
+            "write results to index.csv file - useful to switch it off if changing identify() functions",
         },
         index: {
           type: rawPathType,
-          help: "path to summary index file"
+          help: "path to summary index file",
         },
         folder: {
           type: "string",
           required: true,
-          help: "folder with PDF files"
+          help: "folder with PDF files",
         },
         stripFolder: {
           action: "storeTrue",
           defaultValue: true,
-          help: "remove folder from path in outputs"
+          help: "remove folder from path in outputs",
         },
         filterPath: {
           type: regex,
-          help: "regex to match against paths of files found in folder"
+          help: "regex to match against paths of files found in folder",
         },
         max: {
           type: "int",
           defaultValue: -1,
-          help: "End after max files - ignored if max <= 0"
+          help: "End after max files - ignored if max <= 0",
         },
         listFilesOnly: {
           action: "storeTrue",
           defaultValue: false,
-          help: "just list files found which match filters"
+          help: "just list files found which match filters",
         },
         concurrent: {
           type: "int",
           defaultValue: 1,
-          help: "Number of concurrent requests to execute in parallel"
+          help: "Number of concurrent requests to execute in parallel",
         },
         filterType: {
           choices: allFilterTypes,
           defaultValue: undefined,
-          help: "Specify filtering on commandline, rather than by manual input"
-        }
-      }
-    }
-  }
+          help: "Specify filtering on commandline, rather than by manual input",
+        },
+      },
+    },
+    file: {
+      command: {
+        addHelp: true,
+        description: "Process a single .pdf",
+      },
+      args: {
+        input: {
+          type: "string",
+          required: true,
+          help: "the .pdf file to process",
+        },
+        password: {
+          type: "string",
+          help: "the password for the .pdf (if password protected)",
+        },
+      },
+    },
+  },
 };
 
 function setIndexPath(args) {
@@ -218,6 +235,9 @@ function fixArgs(args) {
       }
       break;
     }
+    case "file": {
+      break;
+    }
   }
 }
 
@@ -236,10 +256,10 @@ function fixArgsAndConfig(args, config) {
       alertError: false,
       scrape: false,
       screen: false,
-      step: false
+      step: false,
     };
     config.cliLog.levelFilter = {
-      debug: false
+      debug: false,
     };
   }
 }
@@ -282,6 +302,10 @@ async function implementation(args) {
       }
       case "folder": {
         await folder(args);
+        break;
+      }
+      case "file": {
+        await file(args);
         break;
       }
     }
@@ -386,16 +410,16 @@ async function findPdfs(args, prevIndex) {
 const Category = {
   new: "new",
   prevSuccess: "prev-success",
-  prevError: "prev-error"
+  prevError: "prev-error",
 };
 
 function categorize(args, filePaths, prevIndex) {
   let counts = {
     new: 0,
     prevSuccess: 0,
-    prevError: 0
+    prevError: 0,
   };
-  let categorized = filePaths.map(filePath => {
+  let categorized = filePaths.map((filePath) => {
     // print with state = new, prev-error, prev-success
     let short = shorten(filePath, args.folder);
     let prev = prevIndex && prevIndex[short];
@@ -449,11 +473,11 @@ async function filterPdfs(args, found) {
       break;
     }
     case "new-only": {
-      filtered = found.filter(x => x.state === Category.new);
+      filtered = found.filter((x) => x.state === Category.new);
       break;
     }
     case "new-and-prev-errors": {
-      filtered = found.filter(x => x.state === Category.new || x.state === Category.prevError);
+      filtered = found.filter((x) => x.state === Category.new || x.state === Category.prevError);
       break;
     }
     case "pattern": {
@@ -471,8 +495,8 @@ async function wildcardMatch(args, found) {
   cliLog.net("--------------------------------");
   while (true) {
     let pattern = await userInput.question("Enter pattern: ", false, undefined, undefined);
-    let matches = found.filter(x => minimatch(x.filePath, pattern));
-    cliLog.info("Matches:\n " + matches.map(x => x.short).join("\n "));
+    let matches = found.filter((x) => minimatch(x.filePath, pattern));
+    cliLog.info("Matches:\n " + matches.map((x) => x.short).join("\n "));
 
     let cont = await userInput.question("Process these files? (Y/n): ", false, undefined, "y");
     if (cont == "y" || cont == "Y") {
@@ -494,7 +518,7 @@ async function processAll(args, filtered) {
   let start = new Date();
 
   // create queue to process tasks concurrently
-  let q = Async.queue(async function(task) {
+  let q = Async.queue(async function (task) {
     let { i, filePath, args, prev } = task;
     // console.log(`start ${i}. ${filePath}`);
     let summary = await doProcess(filePath, args, prev);
@@ -514,9 +538,9 @@ async function processAll(args, filtered) {
       i,
       filePath: filt.filePath,
       args,
-      prev: filt.prev
+      prev: filt.prev,
     };
-    q.push(task, function(err) {
+    q.push(task, function (err) {
       if (err) {
         console.error("task error", i, err);
       } else {
@@ -539,7 +563,7 @@ async function processAll(args, filtered) {
 function writeIndex(args, results, prevIndex) {
   // combine current results with existing results from index
   if (prevIndex) {
-    results.forEach(x => (prevIndex[x.file] = x));
+    results.forEach((x) => (prevIndex[x.file] = x));
     results = Object.values(prevIndex);
   }
 
@@ -565,16 +589,16 @@ function writeSummary(numFound, results, start, end) {
   cliLog.info(`Processing results:`);
   let count;
   // successes
-  count = results.filter(x => x.type == spikeApi.enums.TYPES.SUCCESS).length;
+  count = results.filter((x) => x.type == spikeApi.enums.TYPES.SUCCESS).length;
   cliLog.info(`- successes: ${count} / ${numProcessed}`);
   // fails
-  count = results.filter(x => x.type == spikeApi.enums.TYPES.ERROR).length;
+  count = results.filter((x) => x.type == spikeApi.enums.TYPES.ERROR).length;
   if (count > 0) {
     cliLog.error(`- fails: ${count} / ${numProcessed}`);
   }
 
   // Tool exceptions
-  count = results.filter(x => x.summaryException).length;
+  count = results.filter((x) => x.summaryException).length;
   if (count > 0) {
     cliLog.error(`Tool errors: ${count}`);
   }
@@ -611,7 +635,7 @@ async function doProcess(filePath, args, prev) {
     password,
     writeOutputJson: args.writeOutputJson,
     writeOutputCsv: args.writeOutputCsv,
-    quiet: args.quiet
+    quiet: args.quiet,
   });
 
   return result;
@@ -667,7 +691,7 @@ async function processPdf({
   password,
   writeOutputJson,
   writeOutputCsv,
-  quiet
+  quiet,
 }) {
   let requestTime = new Date();
   let { apiKey, userKey } = appInit.config();
@@ -734,8 +758,47 @@ function createSummarySkipped(folder, filePath, password) {
     type: spikeApi.enums.TYPES.NOTSET,
     code: "skipped",
     file: folder ? shorten(filePath, folder) : path.basename(filePath),
-    password
+    password,
   };
 }
 
+//#region file
+
+async function processSinglePdf({ input, password, writeOutputJson, writeOutputCsv, quiet }) {
+  let requestTime = new Date();
+  let { apiKey, userKey } = appInit.config();
+  let result = await requestPdf(apiKey, userKey, input, password);
+  let responseTime = new Date();
+  // console.log("JSON", JSON.stringify(response, null, 2));
+
+  // report success | fail
+  if (!quiet) {
+    if (result === undefined) {
+      cliLog.error(`error: no response`);
+    } else if (result.type === spikeApi.enums.TYPES.ERROR) {
+      cliLog.error(`error:`, result.code);
+    } else {
+      cliLog.net(`success`);
+      // cliLog.info(`${shortFilePath}: SUCCESS:`, result.data.parser, result.code)
+    }
+  }
+
+  let duration = new Duration(requestTime, responseTime).toString();
+  console.log("Duration:", duration);
+
+  if (result) {
+    if (writeOutputJson) {
+      pdfHelpers.writeOutputJson(input, result);
+    }
+    if (writeOutputCsv && result.type == spikeApi.enums.TYPES.SUCCESS) {
+      pdfHelpers.writeOutputCsv(input, result.data);
+    }
+  }
+}
+
+async function file(args) {
+  await processSinglePdf(args);
+}
+
+////#endregion
 run();
